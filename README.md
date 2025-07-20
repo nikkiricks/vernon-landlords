@@ -12,7 +12,9 @@ This tool helps communities identify concerning ownership patterns that may indi
 
 ## 🚀 Live Demo
 
-**Website:** [https://vernon-landlords.netlify.app](https://vernon-landlords.netlify.app)
+**Website:** [https://vernon-landlords.netlify.app](https://vernon-landlords.netlify.app) *(deployment in progress)*
+
+**Local Testing:** See [deploy.md](deploy.md) for quick setup instructions
 
 ## 🔍 Features
 
