@@ -32,4 +32,3 @@ The `vernon-landlords.zip` file contains a production-ready build including:
 ## Live Site
 Once deployed, the site will be available at:
 - Custom domain: `https://vernon-landlords.netlify.app`
-- Or auto-generated: `https://[random-name].netlify.app`
