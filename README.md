@@ -1,5 +1,7 @@
 # 🏠 Vernon Landlord Transparency Tool
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/13644c31-7490-4a7f-bc20-3422bb6ae1a1/deploy-status)](https://app.netlify.com/projects/vernon-landlords/deploys)
+
 A community-driven web application for analyzing property ownership patterns to identify potential predatory landlord behavior in Portland's Vernon neighborhood and beyond.
 
 ## 🎯 Purpose
@@ -12,7 +14,7 @@ This tool helps communities identify concerning ownership patterns that may indi
 
 ## 🚀 Live Demo
 
-**Website:** [https://vernon-landlords.netlify.app](https://vernon-landlords.netlify.app) *(deployment in progress)*
+**Website:** [https://vernon-landlords.netlify.app](https://vernon-landlords.netlify.app)
 
 **Local Testing:** See [deploy.md](deploy.md) for quick setup instructions
 
