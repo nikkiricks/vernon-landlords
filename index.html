@@ -20,13 +20,77 @@
             </div>
         </header>
 
+        <section class="about-section">
+            <h2>📖 About This Tool</h2>
+            <div class="about-content">
+                <div class="about-grid">
+                    <div class="about-card">
+                        <h3>🏘️ Any Neighborhood Can Use This</h3>
+                        <p>While our sample data is from Portland's Vernon neighborhood, <strong>this tool works for any community</strong>. Upload assessor data from your neighborhood to identify concerning ownership patterns.</p>
+                    </div>
+                    <div class="about-card">
+                        <h3>🔍 What We Analyze</h3>
+                        <p>The tool identifies potential predatory landlord behavior including large property portfolios, below-market purchases, bulk buying patterns, and data anomalies that may indicate shell companies.</p>
+                    </div>
+                    <div class="about-card">
+                        <h3>👥 Who Can Use This</h3>
+                        <p><strong>Tenant organizers, housing advocates, journalists, researchers, and community members</strong> who want to understand property ownership patterns in their neighborhood.</p>
+                    </div>
+                </div>
+
+                <div class="data-instructions">
+                    <h3>📊 How to Get Your Neighborhood's Data</h3>
+                    <div class="instructions-steps">
+                        <div class="step">
+                            <span class="step-number">1</span>
+                            <div class="step-content">
+                                <h4>Visit Portland Maps</h4>
+                                <p>Go to <a href="https://www.portlandmaps.com" target="_blank">portlandmaps.com</a></p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <span class="step-number">2</span>
+                            <div class="step-content">
+                                <h4>Use Advanced Search</h4>
+                                <p>Click "Advanced" → "Assessor"</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <span class="step-number">3</span>
+                            <div class="step-content">
+                                <h4>Export Results</h4>
+                                <p>Select your neighborhood. Click "Search". After running your search, look for "CSV" button to download a CSV file with property data including owner names, sale dates, and prices.</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <span class="step-number">4</span>
+                            <div class="step-content">
+                                <h4>Upload & Analyze</h4>
+                                <p>Upload your CSV file below to analyze ownership patterns in your community. The tool works with any Portland assessor data format.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="privacy-note">
+                    <h3>🔒 Your Data Stays Private</h3>
+                    <p>All analysis happens locally in your browser. No data is sent to external servers. You control what information you upload and analyze.</p>
+                </div>
+            </div>
+        </section>
+
         <section class="upload-section">
-            <h2>📁 Upload Assessor Data</h2>
+            <h2>📁 Upload Your Neighborhood's Data</h2>
+            <p class="upload-description">
+                Upload a CSV file from <a href="https://www.portlandmaps.com" target="_blank">portlandmaps.com</a>. 
+                The file should include property owner names, sale dates, and prices for analysis.
+            </p>
             <div class="upload-area" id="uploadArea">
                 <p>Drop your CSV file here or click to browse</p>
                 <input type="file" id="csvFile" accept=".csv" style="display: none;">
             </div>
             <div class="sample-data">
+                <p class="sample-description">Don't have data yet? Try our sample from the Vernon Neighborhood provided by the <a href="https://www.vernonpdx.org/" target="_blank">Vernon Neighborhood Association</a>:</p>
                 <button id="loadSampleData">Load Sample Vernon Data</button>
             </div>
         </section>

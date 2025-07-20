@@ -12,6 +12,51 @@ This tool helps communities identify concerning ownership patterns that may indi
 - Bulk purchasing strategies
 - Data quality issues that may indicate shell companies
 
+## 🏘️ Any Neighborhood Can Use This Tool
+
+**Why is it called "Vernon"?** Vernon is Portland's neighborhood where we first developed and tested this tool, but **the tool works for any community**. Vernon serves as our sample dataset to demonstrate the analysis capabilities.
+
+### Who Should Use This Tool
+
+- **🏠 Tenant organizers** investigating landlord behavior in their buildings
+- **📢 Housing advocates** researching ownership patterns for campaigns
+- **📰 Journalists** analyzing property ownership for stories
+- **🔬 Researchers** studying housing market dynamics
+- **👥 Community members** who want to understand their neighborhood
+
+### How to Get Your Neighborhood's Data
+
+#### For Portland Neighborhoods:
+
+1. **Visit Portland Maps**
+   - Go to [portlandmaps.com](https://www.portlandmaps.com)
+   - Use the search function to find your neighborhood or specific addresses
+
+2. **Use Advanced Search**
+   - Click "Advanced Search" → "Property Search"
+   - Set geographical boundaries for your neighborhood
+   - Use address ranges or draw boundaries on the map
+
+3. **Export Your Data**
+   - After running your search, look for "Export" or "Download" options
+   - Download as CSV format
+   - The file will include owner names, sale dates, prices, and property details
+
+4. **Upload and Analyze**
+   - Upload your CSV file to this tool
+   - The analysis will automatically detect ownership patterns in your community
+
+#### For Other Cities:
+
+Many cities provide similar assessor data through their websites:
+- Search for "[your city] assessor database" or "[your city] property records"
+- Look for CSV export options
+- Ensure the data includes owner names, sale dates, and prices for best results
+
+### Data Privacy
+
+All analysis happens **locally in your browser** - no data is sent to external servers. You maintain complete control over what information you upload and analyze.
+
 ## 🚀 Live Demo
 
 **Website:** [https://vernon-landlords.netlify.app](https://vernon-landlords.netlify.app)
