@@ -339,10 +339,146 @@ header h1 {
     min-height: 400px;
 }
 
+.chart-controls {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    border: 1px solid #e9ecef;
+}
+
+.chart-controls label {
+    font-weight: 600;
+    color: #2c3e50;
+    margin-right: 10px;
+}
+
+.chart-controls select {
+    padding: 8px 12px;
+    border: 1px solid #bdc3c7;
+    border-radius: 4px;
+    background: white;
+    color: #2c3e50;
+    font-size: 14px;
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+}
+
+.chart-controls select:hover {
+    border-color: #3498db;
+}
+
+.chart-controls select:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+/* Table controls */
+.table-header-with-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.table-header-with-controls h4 {
+    margin: 0;
+    color: #2c3e50;
+}
+
+.table-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.table-controls label {
+    font-weight: 500;
+    color: #2c3e50;
+    font-size: 14px;
+}
+
+.table-controls select {
+    padding: 6px 10px;
+    border: 1px solid #bdc3c7;
+    border-radius: 4px;
+    background: white;
+    color: #2c3e50;
+    font-size: 13px;
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+}
+
+.table-controls select:hover {
+    border-color: #3498db;
+}
+
+.table-controls select:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.15);
+}
+
+@media (max-width: 768px) {
+    .table-header-with-controls {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+/* Sortable table headers */
+.sortable-header {
+    position: relative;
+    cursor: pointer;
+    user-select: none;
+    padding-right: 30px !important;
+}
+
+.sort-arrows {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1px;
+}
+
+.sort-arrow {
+    font-size: 10px;
+    color: #bdc3c7;
+    cursor: pointer;
+    line-height: 1;
+    padding: 1px 3px;
+    border-radius: 2px;
+    transition: all 0.2s ease;
+}
+
+.sort-arrow:hover {
+    color: #3498db;
+    background-color: rgba(52, 152, 219, 0.1);
+}
+
+.sort-arrow.active {
+    color: #3498db;
+    background-color: rgba(52, 152, 219, 0.2);
+    font-weight: bold;
+}
+
+.sortable-header:hover {
+    background-color: rgba(52, 152, 219, 0.05);
+}
+
 table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
+    position: relative;
+    overflow: visible;
 }
 
 table th,
@@ -350,6 +486,8 @@ table td {
     padding: 12px;
     text-align: left;
     border-bottom: 1px solid #ecf0f1;
+    position: relative;
+    overflow: visible;
 }
 
 table th {
@@ -484,6 +622,66 @@ footer a:hover {
     .stats-grid {
         grid-template-columns: 1fr;
     }
+}
+
+/* Combined names indicator */
+.combined-indicator {
+    color: #3498db;
+    cursor: help;
+    font-size: 0.9em;
+    margin-left: 5px;
+    display: inline-block;
+    position: relative;
+}
+
+.combined-indicator:hover {
+    color: #2980b9;
+    transform: scale(1.1);
+    transition: all 0.2s ease;
+}
+
+/* Custom tooltip for combined names */
+.combined-indicator::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #2c3e50;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    white-space: nowrap;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    pointer-events: none;
+    max-width: 300px;
+    white-space: normal;
+    word-wrap: break-word;
+}
+
+.combined-indicator::before {
+    content: "";
+    position: absolute;
+    bottom: 90%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-top-color: #2c3e50;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    z-index: 1001;
+}
+
+.combined-indicator:hover::after,
+.combined-indicator:hover::before {
+    opacity: 1;
+    visibility: visible;
 }
 
 /* Loading states */
