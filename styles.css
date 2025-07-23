@@ -262,6 +262,14 @@ header h1 {
     background: #229954;
 }
 
+#loadKingData {
+    background: #e74c3c;
+}
+
+#loadKingData:hover {
+    background: #c0392b;
+}
+
 /* Analysis Section */
 .analysis-section {
     background: white;
@@ -601,6 +609,17 @@ footer a:hover {
     }
     
     .step-number {
+        margin-bottom: 10px;
+    }
+    
+    .sample-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .sample-data button {
+        width: 100%;
+        max-width: 300px;
         margin-bottom: 10px;
     }
     
