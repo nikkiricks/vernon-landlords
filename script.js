@@ -21,6 +21,7 @@ function initializeEventListeners() {
     document.getElementById('loadSampleData').addEventListener('click', loadSampleData);
     document.getElementById('loadConcordiaData').addEventListener('click', loadConcordiaData);
     document.getElementById('loadKingData').addEventListener('click', loadKingData);
+    document.getElementById('loadWoodlawnData').addEventListener('click', loadWoodlawnData);
     
     // AI analysis button
     document.getElementById('generateAIAnalysis').addEventListener('click', generateAIAnalysis);
@@ -171,6 +172,50 @@ async function loadKingData() {
     } catch (error) {
         console.error('Error loading King sample data:', error);
         alert(`Could not load King sample data: ${error.message}`);
+    }
+}
+
+async function loadWoodlawnData() {
+    console.log('Loading Woodlawn data...');
+    try {
+        const response = await fetch('Assessor-Search-Results_Woodlawn.csv');
+        console.log('Fetch response status:', response.status, response.statusText);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        
+        const csv = await response.text();
+        console.log('CSV data loaded, length:', csv.length);
+        
+        Papa.parse(csv, {
+            header: true,
+            complete: function(results) {
+                console.log('Papa parse complete, rows:', results.data.length);
+                console.log('First few rows:', results.data.slice(0, 3));
+                
+                currentData = results.data.filter(row => 
+                    row.ADDRESS && row.OWNER && row.ADDRESS.trim() !== ''
+                );
+                console.log('Filtered data count:', currentData.length);
+                
+                if (currentData.length === 0) {
+                    console.error('No valid data found after filtering');
+                    alert('No valid property data found in Woodlawn dataset');
+                    return;
+                }
+                
+                analyzeData();
+                showAnalysisSection();
+            },
+            error: function(error) {
+                console.error('Papa parse error:', error);
+                alert('Error parsing Woodlawn CSV data');
+            }
+        });
+    } catch (error) {
+        console.error('Error loading Woodlawn sample data:', error);
+        alert(`Could not load Woodlawn sample data: ${error.message}`);
     }
 }
 
