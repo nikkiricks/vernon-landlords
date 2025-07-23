@@ -17,8 +17,10 @@ function initializeEventListeners() {
     uploadArea.addEventListener('drop', handleDrop);
     fileInput.addEventListener('change', handleFileSelect);
     
-    // Sample data button
+    // Sample data buttons
     document.getElementById('loadSampleData').addEventListener('click', loadSampleData);
+    
+    document.getElementById('loadConcordiaData').addEventListener('click', loadConcordiaData);
     
     // AI analysis button
     document.getElementById('generateAIAnalysis').addEventListener('click', generateAIAnalysis);
@@ -84,6 +86,50 @@ async function loadSampleData() {
     }
 }
 
+async function loadConcordiaData() {
+    console.log('Loading Concordia data...');
+    try {
+        const response = await fetch('Assessor-Search-Results_Concordia.csv');
+        console.log('Fetch response status:', response.status, response.statusText);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        
+        const csv = await response.text();
+        console.log('CSV data loaded, length:', csv.length);
+        
+        Papa.parse(csv, {
+            header: true,
+            complete: function(results) {
+                console.log('Papa parse complete, rows:', results.data.length);
+                console.log('First few rows:', results.data.slice(0, 3));
+                
+                currentData = results.data.filter(row => 
+                    row.ADDRESS && row.OWNER && row.ADDRESS.trim() !== ''
+                );
+                console.log('Filtered data count:', currentData.length);
+                
+                if (currentData.length === 0) {
+                    console.error('No valid data found after filtering');
+                    alert('No valid property data found in Concordia dataset');
+                    return;
+                }
+                
+                analyzeData();
+                showAnalysisSection();
+            },
+            error: function(error) {
+                console.error('Papa parse error:', error);
+                alert('Error parsing Concordia CSV data');
+            }
+        });
+    } catch (error) {
+        console.error('Error loading Concordia sample data:', error);
+        alert(`Could not load Concordia sample data: ${error.message}`);
+    }
+}
+
 // Data analysis functions
 function analyzeData() {
     analysisResults = {
@@ -99,19 +145,77 @@ function analyzeData() {
     renderTables();
 }
 
+// Normalize owner names to combine similar entities
+function normalizeOwnerName(owner) {
+    if (!owner) return '';
+    
+    // Convert to uppercase for comparison
+    let normalized = owner.trim().toUpperCase();
+    
+    // Known mappings for specific entities
+    const knownMappings = {
+        'PORTLAND COMMUNITY REINVEST INITIAT': 'PORTLAND COMMUNITY REINVESTMENT INITIATIVES',
+        'PORTLAND COMMUNITY REINVESTMENT INI': 'PORTLAND COMMUNITY REINVESTMENT INITIATIVES'
+    };
+    
+    // Check exact matches first
+    if (knownMappings[normalized]) {
+        return knownMappings[normalized];
+    }
+    
+    // Check for partial matches (truncated names)
+    for (const [partial, full] of Object.entries(knownMappings)) {
+        if (normalized.includes(partial) || partial.includes(normalized)) {
+            return full;
+        }
+    }
+    
+    // General normalization rules
+    normalized = normalized
+        .replace(/\bLLC\b/g, 'LLC')
+        .replace(/\bINC\b/g, 'INC')
+        .replace(/\bCORP\b/g, 'CORP')
+        .replace(/\bLTD\b/g, 'LTD')
+        .replace(/\s+/g, ' ')
+        .trim();
+    
+    return normalized;
+}
+
 function analyzeOwnership() {
     const ownerCounts = {};
+    const originalNames = {}; // Track original names for display
+    const combinedNames = {}; // Track what names were combined
     
     currentData.forEach(property => {
-        const owner = property.OWNER?.trim();
-        if (owner) {
-            ownerCounts[owner] = (ownerCounts[owner] || 0) + 1;
+        const originalOwner = property.OWNER?.trim();
+        if (originalOwner) {
+            const normalizedOwner = normalizeOwnerName(originalOwner);
+            ownerCounts[normalizedOwner] = (ownerCounts[normalizedOwner] || 0) + 1;
+            
+            // Keep track of original names for this normalized name
+            if (!originalNames[normalizedOwner]) {
+                originalNames[normalizedOwner] = new Set();
+            }
+            originalNames[normalizedOwner].add(originalOwner);
+        }
+    });
+    
+    // Identify combined names (those with multiple original versions)
+    Object.entries(originalNames).forEach(([normalized, originals]) => {
+        if (originals.size > 1) {
+            combinedNames[normalized] = Array.from(originals);
         }
     });
     
     const sortedOwners = Object.entries(ownerCounts)
         .sort(([,a], [,b]) => b - a)
-        .map(([owner, count]) => ({ owner, count }));
+        .map(([owner, count]) => ({ 
+            owner, 
+            count,
+            isCombined: combinedNames[owner] ? true : false,
+            originalNames: combinedNames[owner] || []
+        }));
     
     const multiPropertyOwners = sortedOwners.filter(item => item.count > 1);
     
@@ -119,7 +223,8 @@ function analyzeOwnership() {
         ownerCounts,
         sortedOwners,
         multiPropertyOwners,
-        totalUniqueOwners: sortedOwners.length
+        totalUniqueOwners: sortedOwners.length,
+        combinedNames
     };
 }
 
@@ -223,16 +328,35 @@ function renderCharts() {
 
 function renderOwnershipChart() {
     const topOwners = analysisResults.ownershipAnalysis.sortedOwners.slice(0, 15);
+    // Reverse the order so highest values appear at the top
+    const reversedOwners = topOwners.reverse();
     
     const trace = {
-        x: topOwners.map(item => item.count),
-        y: topOwners.map(item => item.owner.length > 30 ? item.owner.substring(0, 30) + '...' : item.owner),
+        x: reversedOwners.map(item => item.count),
+        y: reversedOwners.map(item => {
+            // Add indicator for combined names
+            return item.isCombined ? `${item.owner} ℹ️` : item.owner;
+        }),
         type: 'bar',
         orientation: 'h',
+        text: reversedOwners.map(item => {
+            if (item.isCombined) {
+                return `Combined from: ${item.originalNames.join(', ')}`;
+            }
+            return '';
+        }),
+        customdata: reversedOwners.map(item => 
+            item.isCombined ? `Combined from: ${item.originalNames.join(', ')}` : ''
+        ),
+        hovertemplate: '<b>%{y}</b><br>Properties: %{x}<br>%{customdata}<extra></extra>',
         marker: {
-            color: 'rgba(102, 126, 234, 0.8)',
+            color: reversedOwners.map(item => 
+                item.isCombined ? 'rgba(52, 152, 219, 0.8)' : 'rgba(102, 126, 234, 0.8)'
+            ),
             line: {
-                color: 'rgba(102, 126, 234, 1.0)',
+                color: reversedOwners.map(item => 
+                    item.isCombined ? 'rgba(52, 152, 219, 1.0)' : 'rgba(102, 126, 234, 1.0)'
+                ),
                 width: 1
             }
         }
@@ -241,9 +365,13 @@ function renderOwnershipChart() {
     const layout = {
         title: 'Top 15 Property Owners',
         xaxis: { title: 'Number of Properties' },
-        yaxis: { title: 'Owner' },
+        yaxis: { 
+            title: 'Owner',
+            automargin: true,
+            tickmode: 'linear'
+        },
         height: 600,
-        margin: { l: 200 }
+        margin: { l: 320, r: 50, t: 50, b: 50 }
     };
     
     Plotly.newPlot('ownershipChart', [trace], layout);
@@ -251,6 +379,7 @@ function renderOwnershipChart() {
 
 function renderPricingChart() {
     const prices = analysisResults.pricingAnalysis.validSales.map(p => parseFloat(p.SALE_PRICE));
+    const maxPrice = Math.max(...prices);
     
     const trace = {
         x: prices,
@@ -267,7 +396,10 @@ function renderPricingChart() {
     
     const layout = {
         title: 'Distribution of Sale Prices',
-        xaxis: { title: 'Sale Price ($)' },
+        xaxis: { 
+            title: 'Sale Price ($)',
+            range: [0, maxPrice]
+        },
         yaxis: { title: 'Frequency' },
         height: 400
     };
@@ -336,10 +468,17 @@ function renderOwnershipTable() {
         const riskLevel = item.count >= 10 ? 'High' : item.count >= 5 ? 'Medium' : 'Low';
         const riskColor = riskLevel === 'High' ? '#e74c3c' : riskLevel === 'Medium' ? '#f39c12' : '#27ae60';
         
+        // Create tooltip for combined names
+        let ownerDisplay = item.owner;
+        if (item.isCombined && item.originalNames && item.originalNames.length > 0) {
+            const tooltip = `Combined from: ${item.originalNames.join(', ')}`;
+            ownerDisplay = `${item.owner} <span class="combined-indicator" title="${tooltip}" data-tooltip="${tooltip}">ℹ️</span>`;
+        }
+        
         html += `
             <tr>
                 <td>${index + 1}</td>
-                <td>${item.owner}</td>
+                <td>${ownerDisplay}</td>
                 <td>${item.count}</td>
                 <td style="color: ${riskColor}; font-weight: bold;">${riskLevel}</td>
             </tr>
@@ -350,16 +489,46 @@ function renderOwnershipTable() {
     document.getElementById('ownershipTable').innerHTML = html;
 }
 
-function renderBelowMarketTable() {
-    const belowMarket = analysisResults.pricingAnalysis.belowMarketSales.slice(0, 15);
+function renderBelowMarketTable(sortBy = 'price', sortOrder = 'asc') {
+    let belowMarket = [...analysisResults.pricingAnalysis.belowMarketSales];
+    
+    // Sort based on user preference
+    if (sortBy === 'date') {
+        belowMarket.sort((a, b) => {
+            const dateA = new Date(a.SALE_DATE);
+            const dateB = new Date(b.SALE_DATE);
+            return sortOrder === 'asc' ? dateA - dateB : dateB - dateA;
+        });
+    } else if (sortBy === 'price') {
+        belowMarket.sort((a, b) => {
+            const priceA = parseFloat(a.SALE_PRICE);
+            const priceB = parseFloat(b.SALE_PRICE);
+            return sortOrder === 'asc' ? priceA - priceB : priceB - priceA;
+        });
+    }
+    
+    // Take top 15 after sorting
+    belowMarket = belowMarket.slice(0, 15);
     
     let html = `
         <h4>Properties Sold Below Market (< $${analysisResults.pricingAnalysis.threshold.toLocaleString()})</h4>
         <table>
             <thead>
                 <tr>
-                    <th>Sale Price</th>
-                    <th>Sale Date</th>
+                    <th class="sortable-header">
+                        Sale Price
+                        <div class="sort-arrows">
+                            <span class="sort-arrow ${sortBy === 'price' && sortOrder === 'asc' ? 'active' : ''}" onclick="sortBelowMarketTable('price', 'asc')">▲</span>
+                            <span class="sort-arrow ${sortBy === 'price' && sortOrder === 'desc' ? 'active' : ''}" onclick="sortBelowMarketTable('price', 'desc')">▼</span>
+                        </div>
+                    </th>
+                    <th class="sortable-header">
+                        Sale Date
+                        <div class="sort-arrows">
+                            <span class="sort-arrow ${sortBy === 'date' && sortOrder === 'asc' ? 'active' : ''}" onclick="sortBelowMarketTable('date', 'asc')">▲</span>
+                            <span class="sort-arrow ${sortBy === 'date' && sortOrder === 'desc' ? 'active' : ''}" onclick="sortBelowMarketTable('date', 'desc')">▼</span>
+                        </div>
+                    </th>
                     <th>Owner</th>
                     <th>Address</th>
                 </tr>
@@ -380,6 +549,11 @@ function renderBelowMarketTable() {
     
     html += '</tbody></table>';
     document.getElementById('belowMarketTable').innerHTML = html;
+}
+
+// Handle column header sorting
+function sortBelowMarketTable(column, order) {
+    renderBelowMarketTable(column, order);
 }
 
 function renderBulkPurchaseTable() {
