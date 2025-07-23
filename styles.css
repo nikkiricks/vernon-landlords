@@ -41,6 +41,13 @@ header h1 {
     margin-bottom: 20px;
 }
 
+.github-link {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
 .github-link a {
     display: inline-block;
     background: #24292e;
@@ -52,8 +59,16 @@ header h1 {
     transition: background 0.3s ease;
 }
 
+.github-link a.nav-link {
+    background: #e74c3c;
+}
+
 .github-link a:hover {
     background: #444d56;
+}
+
+.github-link a.nav-link:hover {
+    background: #c0392b;
 }
 
 /* About Section */
