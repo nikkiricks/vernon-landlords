@@ -230,6 +230,13 @@ header h1 {
     font-style: italic;
 }
 
+.sample-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
 .sample-data button {
     background: #3498db;
     color: white;
@@ -239,10 +246,20 @@ header h1 {
     cursor: pointer;
     font-size: 1rem;
     transition: background 0.3s ease;
+    flex: 1;
+    min-width: 200px;
 }
 
 .sample-data button:hover {
     background: #2980b9;
+}
+
+#loadConcordiaData {
+    background: #27ae60;
+}
+
+#loadConcordiaData:hover {
+    background: #229954;
 }
 
 /* Analysis Section */

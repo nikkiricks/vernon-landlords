@@ -17,8 +17,9 @@ function initializeEventListeners() {
     uploadArea.addEventListener('drop', handleDrop);
     fileInput.addEventListener('change', handleFileSelect);
     
-    // Sample data button
+    // Sample data buttons
     document.getElementById('loadSampleData').addEventListener('click', loadSampleData);
+    document.getElementById('loadConcordiaData').addEventListener('click', loadConcordiaData);
     
     // AI analysis button
     document.getElementById('generateAIAnalysis').addEventListener('click', generateAIAnalysis);
@@ -81,6 +82,27 @@ async function loadSampleData() {
     } catch (error) {
         console.error('Error loading sample data:', error);
         alert('Could not load sample data. Please upload your own CSV file.');
+    }
+}
+
+async function loadConcordiaData() {
+    try {
+        const response = await fetch('Assessor-Search-Results_Concordia.csv');
+        const csv = await response.text();
+        
+        Papa.parse(csv, {
+            header: true,
+            complete: function(results) {
+                currentData = results.data.filter(row => 
+                    row.ADDRESS && row.OWNER && row.ADDRESS.trim() !== ''
+                );
+                analyzeData();
+                showAnalysisSection();
+            }
+        });
+    } catch (error) {
+        console.error('Error loading Concordia sample data:', error);
+        alert('Could not load Concordia sample data. Please upload your own CSV file.');
     }
 }
 
