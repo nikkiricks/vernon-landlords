@@ -182,7 +182,6 @@ function analyzeOwnership() {
     Object.entries(originalNames).forEach(([normalized, originals]) => {
         if (originals.size > 1) {
             combinedNames[normalized] = Array.from(originals);
-            console.log('Combined name found:', normalized, 'from:', Array.from(originals));
         }
     });
     
@@ -448,12 +447,9 @@ function renderOwnershipTable() {
         
         // Create tooltip for combined names
         let ownerDisplay = item.owner;
-        console.log('Table row:', index + 1, 'Owner:', item.owner, 'isCombined:', item.isCombined, 'originalNames:', item.originalNames);
-        
         if (item.isCombined && item.originalNames && item.originalNames.length > 0) {
             const tooltip = `Combined from: ${item.originalNames.join(', ')}`;
-            ownerDisplay = `${item.owner} <span class="combined-indicator" title="${tooltip}" data-tooltip="${tooltip}" onmouseover="console.log('Tooltip hover detected')">ℹ️</span>`;
-            console.log('Adding tooltip for:', item.owner, 'with:', tooltip);
+            ownerDisplay = `${item.owner} <span class="combined-indicator" title="${tooltip}" data-tooltip="${tooltip}">ℹ️</span>`;
         }
         
         html += `
