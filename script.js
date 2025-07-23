@@ -17,11 +17,15 @@ function initializeEventListeners() {
     uploadArea.addEventListener('drop', handleDrop);
     fileInput.addEventListener('change', handleFileSelect);
     
-    // Sample data buttons
-    document.getElementById('loadSampleData').addEventListener('click', loadSampleData);
-    document.getElementById('loadConcordiaData').addEventListener('click', loadConcordiaData);
-    document.getElementById('loadKingData').addEventListener('click', loadKingData);
-    document.getElementById('loadWoodlawnData').addEventListener('click', loadWoodlawnData);
+    // Neighborhood selector
+    const neighborhoodSelect = document.getElementById('neighborhoodSelect');
+    const loadButton = document.getElementById('loadNeighborhoodData');
+    
+    neighborhoodSelect.addEventListener('change', function() {
+        loadButton.disabled = !this.value;
+    });
+    
+    loadButton.addEventListener('click', loadSelectedNeighborhood);
     
     // AI analysis button
     document.getElementById('generateAIAnalysis').addEventListener('click', generateAIAnalysis);
@@ -175,10 +179,21 @@ async function loadKingData() {
     }
 }
 
-async function loadWoodlawnData() {
-    console.log('Loading Woodlawn data...');
+async function loadSelectedNeighborhood() {
+    const select = document.getElementById('neighborhoodSelect');
+    const selectedOption = select.options[select.selectedIndex];
+    const filename = selectedOption.getAttribute('data-file');
+    const neighborhood = selectedOption.textContent;
+    
+    if (!filename) {
+        alert('Please select a neighborhood to analyze.');
+        return;
+    }
+    
+    console.log(`Loading ${neighborhood} data from ${filename}...`);
+    
     try {
-        const response = await fetch('Assessor-Search-Results_Woodlawn.csv');
+        const response = await fetch(filename);
         console.log('Fetch response status:', response.status, response.statusText);
         
         if (!response.ok) {
@@ -201,7 +216,7 @@ async function loadWoodlawnData() {
                 
                 if (currentData.length === 0) {
                     console.error('No valid data found after filtering');
-                    alert('No valid property data found in Woodlawn dataset');
+                    alert(`No valid property data found in ${neighborhood} dataset`);
                     return;
                 }
                 
@@ -210,12 +225,12 @@ async function loadWoodlawnData() {
             },
             error: function(error) {
                 console.error('Papa parse error:', error);
-                alert('Error parsing Woodlawn CSV data');
+                alert(`Error parsing ${neighborhood} CSV data`);
             }
         });
     } catch (error) {
-        console.error('Error loading Woodlawn sample data:', error);
-        alert(`Could not load Woodlawn sample data: ${error.message}`);
+        console.error(`Error loading ${neighborhood} sample data:`, error);
+        alert(`Could not load ${neighborhood} sample data: ${error.message}`);
     }
 }
 

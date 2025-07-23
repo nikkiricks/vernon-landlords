@@ -91,12 +91,20 @@
                 <input type="file" id="csvFile" accept=".csv" style="display: none;">
             </div>
             <div class="sample-data">
-                <p class="sample-description">Don't have data yet? Try our sample datasets:</p>
-                <div class="sample-buttons">
-                    <button id="loadSampleData">Load Sample Vernon Data</button>
-                    <button id="loadConcordiaData">Load Sample Concordia Data</button>
-                    <button id="loadKingData">Load Sample King Data</button>
-                    <button id="loadWoodlawnData">Load Sample Woodlawn Data</button>
+                <p class="sample-description">Don't have data yet? Try our sample datasets from Portland neighborhoods:</p>
+                <div class="neighborhood-selector">
+                    <label for="neighborhoodSelect">Choose a neighborhood:</label>
+                    <div class="select-wrapper">
+                        <select id="neighborhoodSelect">
+                            <option value="">Select a neighborhood to analyze...</option>
+                            <option value="vernon" data-file="Assessor-Search-Results.csv">Vernon (Original Sample)</option>
+                            <option value="concordia" data-file="Assessor-Search-Results_Concordia.csv">Concordia</option>
+                            <option value="king" data-file="Assessor-Search-Results_King.csv">King</option>
+                            <option value="woodlawn" data-file="Assessor-Search-Results_Woodlawn.csv">Woodlawn</option>
+                            <option value="sabin" data-file="Assessor-Search-Results_Sabin.csv">Sabin</option>
+                        </select>
+                        <button id="loadNeighborhoodData" disabled>Analyze Selected Neighborhood</button>
+                    </div>
                 </div>
             </div>
         </section>
