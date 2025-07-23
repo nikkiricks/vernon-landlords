@@ -87,23 +87,46 @@ async function loadSampleData() {
 }
 
 async function loadConcordiaData() {
+    console.log('Loading Concordia data...');
     try {
         const response = await fetch('Assessor-Search-Results_Concordia.csv');
+        console.log('Fetch response status:', response.status, response.statusText);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        
         const csv = await response.text();
+        console.log('CSV data loaded, length:', csv.length);
         
         Papa.parse(csv, {
             header: true,
             complete: function(results) {
+                console.log('Papa parse complete, rows:', results.data.length);
+                console.log('First few rows:', results.data.slice(0, 3));
+                
                 currentData = results.data.filter(row => 
                     row.ADDRESS && row.OWNER && row.ADDRESS.trim() !== ''
                 );
+                console.log('Filtered data count:', currentData.length);
+                
+                if (currentData.length === 0) {
+                    console.error('No valid data found after filtering');
+                    alert('No valid property data found in Concordia dataset');
+                    return;
+                }
+                
                 analyzeData();
                 showAnalysisSection();
+            },
+            error: function(error) {
+                console.error('Papa parse error:', error);
+                alert('Error parsing Concordia CSV data');
             }
         });
     } catch (error) {
         console.error('Error loading Concordia sample data:', error);
-        alert('Could not load Concordia sample data. Please upload your own CSV file.');
+        alert(`Could not load Concordia sample data: ${error.message}`);
     }
 }
 
