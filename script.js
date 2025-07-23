@@ -19,8 +19,8 @@ function initializeEventListeners() {
     
     // Sample data buttons
     document.getElementById('loadSampleData').addEventListener('click', loadSampleData);
-    
     document.getElementById('loadConcordiaData').addEventListener('click', loadConcordiaData);
+    document.getElementById('loadKingData').addEventListener('click', loadKingData);
     
     // AI analysis button
     document.getElementById('generateAIAnalysis').addEventListener('click', generateAIAnalysis);
@@ -127,6 +127,50 @@ async function loadConcordiaData() {
     } catch (error) {
         console.error('Error loading Concordia sample data:', error);
         alert(`Could not load Concordia sample data: ${error.message}`);
+    }
+}
+
+async function loadKingData() {
+    console.log('Loading King data...');
+    try {
+        const response = await fetch('Assessor-Search-Results_King.csv');
+        console.log('Fetch response status:', response.status, response.statusText);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        
+        const csv = await response.text();
+        console.log('CSV data loaded, length:', csv.length);
+        
+        Papa.parse(csv, {
+            header: true,
+            complete: function(results) {
+                console.log('Papa parse complete, rows:', results.data.length);
+                console.log('First few rows:', results.data.slice(0, 3));
+                
+                currentData = results.data.filter(row => 
+                    row.ADDRESS && row.OWNER && row.ADDRESS.trim() !== ''
+                );
+                console.log('Filtered data count:', currentData.length);
+                
+                if (currentData.length === 0) {
+                    console.error('No valid data found after filtering');
+                    alert('No valid property data found in King dataset');
+                    return;
+                }
+                
+                analyzeData();
+                showAnalysisSection();
+            },
+            error: function(error) {
+                console.error('Papa parse error:', error);
+                alert('Error parsing King CSV data');
+            }
+        });
+    } catch (error) {
+        console.error('Error loading King sample data:', error);
+        alert(`Could not load King sample data: ${error.message}`);
     }
 }
 
