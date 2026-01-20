@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Housing Justice Organizing Guide</title>
+    <link rel="stylesheet" href="styles.css?v=20250723">
+    <link rel="stylesheet" href="organize.css?v=20250723">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🏠✊ Housing Justice Organizing Guide</h1>
+            <p class="subtitle">Turn data into power - Build tenant solidarity and community control</p>
+            <div class="navigation-links">
+                <a href="index.html" class="nav-link">
+                    📊 Back to Data Analysis Tool
+                </a>
+                <a href="https://github.com/nikkiricks/vernon-landlords" target="_blank" class="nav-link">
+                    📋 View Source on GitHub
+                </a>
+            </div>
+        </header>
+
+        <!-- Power Mapping Section -->
+        <section class="organizing-section">
+            <h2>🗺️ Power Mapping: Who Controls Housing in Your Neighborhood</h2>
+            <div class="power-mapping">
+                <div class="power-intro">
+                    <p>Understanding who holds power over housing in your community is the first step toward building tenant power. Use your neighborhood's data to create a power map that reveals the key players affecting your housing security.</p>
+                </div>
+                
+                <div class="power-upload">
+                    <h3>📁 Load Your Neighborhood Data</h3>
+                    <p>Upload the same CSV data you used in the analysis tool to generate your power map:</p>
+                    <div class="upload-area" id="powerUploadArea">
+                        <p>Drop your CSV file here or click to browse</p>
+                        <input type="file" id="powerCsvFile" accept=".csv" style="display: none;">
+                    </div>
+                    <div class="sample-data">
+                        <p>Or use sample data to explore the tool:</p>
+                        <div class="neighborhood-selector">
+                            <label for="powerNeighborhoodSelect">Choose a neighborhood:</label>
+                            <div class="select-wrapper">
+                                <select id="powerNeighborhoodSelect">
+                                    <option value="">Select a neighborhood...</option>
+                                    <option value="vernon" data-file="Assessor-Search-Results.csv">Vernon</option>
+                                    <option value="concordia" data-file="Assessor-Search-Results_Concordia.csv">Concordia</option>
+                                    <option value="king" data-file="Assessor-Search-Results_King.csv">King</option>
+                                    <option value="woodlawn" data-file="Assessor-Search-Results_Woodlawn.csv">Woodlawn</option>
+                                    <option value="sabin" data-file="Assessor-Search-Results_Sabin.csv">Sabin</option>
+                                </select>
+                                <button id="loadPowerData" disabled>Generate Power Map</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="power-results" id="powerResults" style="display: none;">
+                    <h3>🎯 Your Neighborhood Power Map</h3>
+                    <div id="powerVisualization"></div>
+                    <div id="powerAnalysis"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Organizing Principles Section -->
+        <section class="organizing-section">
+            <h2>📚 Organizing Principles for Housing Justice</h2>
+            <div class="principles-grid">
+                <div class="principle-card">
+                    <h3>🤝 Build Collective Power</h3>
+                    <p><strong>Individual problems require collective solutions.</strong> Housing issues affect entire communities - organize with your neighbors, not just for them.</p>
+                    <ul>
+                        <li>Start with one-on-one conversations with neighbors</li>
+                        <li>Form tenant associations and neighborhood groups</li>
+                        <li>Connect with existing housing justice organizations</li>
+                        <li>Use data to identify shared concerns and common targets</li>
+                    </ul>
+                </div>
+
+                <div class="principle-card">
+                    <h3>🔍 Follow the Money</h3>
+                    <p><strong>Housing is a human right, not a commodity.</strong> Track ownership patterns to understand how speculation drives displacement.</p>
+                    <ul>
+                        <li>Identify large portfolio owners and corporate entities</li>
+                        <li>Research property management companies and their practices</li>
+                        <li>Map connections between owners, banks, and political donors</li>
+                        <li>Expose below-market purchases that may indicate speculation</li>
+                    </ul>
+                </div>
+
+                <div class="principle-card">
+                    <h3>⚖️ Target Decision Makers</h3>
+                    <p><strong>Power concedes nothing without a demand.</strong> Identify who has the power to make changes and pressure them strategically.</p>
+                    <ul>
+                        <li>City commissioners and housing bureau officials</li>
+                        <li>Property owners and management companies</li>
+                        <li>Banks and financial institutions enabling speculation</li>
+                        <li>Developers and real estate lobby groups</li>
+                    </ul>
+                </div>
+
+                <div class="principle-card">
+                    <h3>🏛️ Make the Political Personal</h3>
+                    <p><strong>Housing policy affects real people.</strong> Connect data trends to lived experiences and human stories.</p>
+                    <ul>
+                        <li>Share tenant stories of displacement and rent increases</li>
+                        <li>Document code violations and habitability issues</li>
+                        <li>Connect ownership data to specific tenant experiences</li>
+                        <li>Make abstract policies concrete through personal impact</li>
+                    </ul>
+                </div>
+
+                <div class="principle-card">
+                    <h3>🌱 Think Long-term</h3>
+                    <p><strong>Systemic change requires sustained organizing.</strong> Build infrastructure for ongoing campaigns, not just single victories.</p>
+                    <ul>
+                        <li>Develop leadership among directly affected people</li>
+                        <li>Create sustainable organizational structures</li>
+                        <li>Build alliances across neighborhoods and issues</li>
+                        <li>Plan for policy implementation and enforcement</li>
+                    </ul>
+                </div>
+
+                <div class="principle-card">
+                    <h3>✊ Center Racial and Economic Justice</h3>
+                    <p><strong>Housing inequality isn't accidental.</strong> Address how racism and classism shape housing access and displacement patterns.</p>
+                    <ul>
+                        <li>Prioritize leadership of Black, Indigenous, and communities of color</li>
+                        <li>Analyze displacement patterns through racial and economic lens</li>
+                        <li>Connect housing to broader struggles for community control</li>
+                        <li>Challenge exclusionary zoning and development patterns</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Portland Context Section -->
+        <section class="organizing-section">
+            <h2>🌲 Portland Housing Justice Context</h2>
+            <div class="context-content">
+                <div class="timeline-section">
+                    <h3>📖 Historical Context: How We Got Here</h3>
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-date">1950s-1970s</div>
+                            <div class="timeline-content">
+                                <h4>Urban Renewal and Displacement</h4>
+                                <p>The destruction of Albina - Portland's historic Black neighborhood - through urban renewal projects displaced thousands of Black families and destroyed generational wealth. This set the stage for ongoing gentrification patterns.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="timeline-item">
+                            <div class="timeline-date">1990s-2000s</div>
+                            <div class="timeline-content">
+                                <h4>The Growth Machine</h4>
+                                <p>Portland's "livability" brand attracted new residents and investment, driving up land values. Exclusionary zoning preserved single-family neighborhoods while concentrating affordable housing in specific areas.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="timeline-item">
+                            <div class="timeline-date">2010s</div>
+                            <div class="timeline-content">
+                                <h4>Tech Boom and Speculation</h4>
+                                <p>Corporate investors and out-of-state buyers began purchasing Portland properties as investment vehicles. Airbnb removed units from housing market. Rents increased faster than wages.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="timeline-item">
+                            <div class="timeline-date">2020-Present</div>
+                            <div class="timeline-content">
+                                <h4>Housing Crisis Acceleration</h4>
+                                <p>COVID-19 intensified housing insecurity. Wall Street investors increased purchases. Houselessness reached crisis levels. Tenant organizing and mutual aid networks expanded in response.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="current-landscape">
+                    <h3>🏢 Current Power Landscape</h3>
+                    <div class="power-players">
+                        <div class="player-category">
+                            <h4>Key Decision Makers</h4>
+                            <ul>
+                                <li><strong>Portland City Council:</strong> Zoning, tenant protections, housing policy</li>
+                                <li><strong>Metro Council:</strong> Regional housing policy, urban growth boundary</li>
+                                <li><strong>Oregon Legislature:</strong> Statewide tenant rights, preemption laws</li>
+                                <li><strong>Multnomah County:</strong> Social services, homelessness response</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="player-category">
+                            <h4>Economic Interests</h4>
+                            <ul>
+                                <li><strong>Portland Metro Association of Realtors:</strong> Opposes tenant protections</li>
+                                <li><strong>Rental Housing Alliance:</strong> Landlord lobby group</li>
+                                <li><strong>Home Builders Association:</strong> Development and zoning influence</li>
+                                <li><strong>Downtown Development Groups:</strong> Urban renewal and tax increment financing</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="player-category">
+                            <h4>Community Organizations</h4>
+                            <ul>
+                                <li><strong>Portland Tenants United:</strong> Citywide tenant organizing</li>
+                                <li><strong>Community Alliance of Tenants:</strong> Statewide tenant rights</li>
+                                <li><strong>Housing Justice Portland:</strong> Housing as human right advocacy</li>
+                                <li><strong>Neighborhood associations:</strong> Varying positions on housing policy</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Action Strategies Section -->
+        <section class="organizing-section">
+            <h2>🎯 Strategic Actions: From Data to Demands</h2>
+            <div class="strategies-content">
+                <div class="strategy-path">
+                    <h3>📊 Phase 1: Research and Investigation</h3>
+                    <div class="action-steps">
+                        <div class="step-card">
+                            <h4>🔍 Data Analysis</h4>
+                            <ul>
+                                <li>Use the landlord transparency tool to identify large property owners</li>
+                                <li>Cross-reference with property management company websites</li>
+                                <li>Research corporate entities through Secretary of State filings</li>
+                                <li>Map properties to identify geographic concentration patterns</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="step-card">
+                            <h4>📋 Tenant Surveys</h4>
+                            <ul>
+                                <li>Door-knock to gather tenant experiences with specific landlords</li>
+                                <li>Document rent increases, code violations, and displacement</li>
+                                <li>Identify properties managed by problematic companies</li>
+                                <li>Build database connecting ownership data to tenant experiences</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="step-card">
+                            <h4>🏛️ Policy Research</h4>
+                            <ul>
+                                <li>Review city code violations database for target properties</li>
+                                <li>Research landlord compliance with tenant protection laws</li>
+                                <li>Analyze political donations by real estate interests</li>
+                                <li>Study successful tenant protection policies in other cities</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="strategy-path">
+                    <h3>🤝 Phase 2: Base Building and Alliance Formation</h3>
+                    <div class="action-steps">
+                        <div class="step-card">
+                            <h4>👥 Tenant Organizing</h4>
+                            <ul>
+                                <li>Form tenant associations in buildings owned by large landlords</li>
+                                <li>Hold "know your rights" workshops in affected neighborhoods</li>
+                                <li>Create tenant defense networks for eviction support</li>
+                                <li>Develop tenant leadership through organizing training</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="step-card">
+                            <h4>🌍 Coalition Building</h4>
+                            <ul>
+                                <li>Partner with faith communities and community centers</li>
+                                <li>Build alliances with racial justice and immigrant rights groups</li>
+                                <li>Connect with environmental and anti-displacement organizations</li>
+                                <li>Engage supportive neighborhood associations and business owners</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="step-card">
+                            <h4>📢 Public Education</h4>
+                            <ul>
+                                <li>Share data analysis through community presentations</li>
+                                <li>Create social media campaigns highlighting ownership patterns</li>
+                                <li>Organize "toxic tours" of properties owned by predatory landlords</li>
+                                <li>Write op-eds and letters to editors connecting data to lived experience</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="strategy-path">
+                    <h3>⚡ Phase 3: Campaign and Direct Action</h3>
+                    <div class="action-steps">
+                        <div class="step-card">
+                            <h4>🎯 Targeted Campaigns</h4>
+                            <ul>
+                                <li>Launch campaigns targeting worst landlords identified in data</li>
+                                <li>Demand repairs, rent reductions, and tenant protections</li>
+                                <li>Use public pressure through demonstrations and media</li>
+                                <li>File complaints with city agencies and housing court</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="step-card">
+                            <h4>🏛️ Policy Advocacy</h4>
+                            <ul>
+                                <li>Develop policy proposals based on data analysis</li>
+                                <li>Testify at city council and county commission meetings</li>
+                                <li>Meet with elected officials to present research findings</li>
+                                <li>Organize constituent pressure on key decision makers</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="step-card">
+                            <h4>✊ Direct Action</h4>
+                            <ul>
+                                <li>Organize tenant strikes and rent withholding campaigns</li>
+                                <li>Stage demonstrations at landlord offices and properties</li>
+                                <li>Disrupt city meetings when officials ignore tenant concerns</li>
+                                <li>Use creative tactics to highlight housing injustice</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Vision Section -->
+        <section class="organizing-section">
+            <h2>🌟 Vision: Community-Controlled Housing</h2>
+            <div class="vision-content">
+                <div class="vision-intro">
+                    <p>Housing justice isn't just about stopping bad landlords - it's about building a future where communities control their housing and everyone has a stable, dignified home. Here's what that could look like:</p>
+                </div>
+
+                <div class="vision-categories">
+                    <div class="vision-card">
+                        <h3>🏘️ Social Housing</h3>
+                        <p><strong>Publicly-owned housing for all income levels</strong></p>
+                        <ul>
+                            <li>City-owned housing developed for community benefit, not profit</li>
+                            <li>Mixed-income developments that avoid concentrating poverty</li>
+                            <li>Tenant management and cooperative ownership models</li>
+                            <li>Long-term affordability without displacement risk</li>
+                        </ul>
+                        <div class="example-box">
+                            <strong>Examples:</strong> Vienna's public housing serves 60% of residents across all income levels. Barcelona is buying buildings to convert to public housing.
+                        </div>
+                    </div>
+
+                    <div class="vision-card">
+                        <h3>🤝 Community Land Trusts</h3>
+                        <p><strong>Permanently affordable housing controlled by residents</strong></p>
+                        <ul>
+                            <li>Community ownership removes land from speculation</li>
+                            <li>Resident ownership with resale restrictions maintain affordability</li>
+                            <li>Democratic governance by residents and community members</li>
+                            <li>Wealth building for residents without displacement risk</li>
+                        </ul>
+                        <div class="example-box">
+                            <strong>Examples:</strong> Burlington, VT has preserved affordable housing through CLTs since the 1980s. Champlain Housing Trust serves 3,000+ families.
+                        </div>
+                    </div>
+
+                    <div class="vision-card">
+                        <h3>🏛️ Tenant Protection Policies</h3>
+                        <p><strong>Strong regulations that prioritize housing stability</strong></p>
+                        <ul>
+                            <li>Just cause eviction protections and strong rent stabilization</li>
+                            <li>Right to organize without retaliation</li>
+                            <li>Mandatory habitability standards with tenant enforcement rights</li>
+                            <li>Tenant opportunity to purchase when properties are sold</li>
+                        </ul>
+                        <div class="example-box">
+                            <strong>Examples:</strong> Berlin's rent cap (until overturned). Richmond, CA's just cause and rent control. Washington State's statewide just cause law.
+                        </div>
+                    </div>
+
+                    <div class="vision-card">
+                        <h3>💰 Public Investment</h3>
+                        <p><strong>Resources directed toward housing as public good</strong></p>
+                        <ul>
+                            <li>Real estate transfer taxes fund affordable housing development</li>
+                            <li>Inclusionary zoning requires affordable units in new development</li>
+                            <li>Public banking keeps housing investment local</li>
+                            <li>Land value capture funds community-controlled development</li>
+                        </ul>
+                        <div class="example-box">
+                            <strong>Examples:</strong> Seattle's employer tax funds homeless services. San Francisco's transfer tax generates $44M annually for affordable housing.
+                        </div>
+                    </div>
+
+                    <div class="vision-card">
+                        <h3>⚖️ Speculation Controls</h3>
+                        <p><strong>Policies that prioritize housing over investment returns</strong></p>
+                        <ul>
+                            <li>Vacancy taxes penalize speculation and warehousing</li>
+                            <li>Corporate ownership limits prevent Wall Street control</li>
+                            <li>Right of first refusal gives tenants and community priority</li>
+                            <li>Speculation taxes on rapid resale discourage flipping</li>
+                        </ul>
+                        <div class="example-box">
+                            <strong>Examples:</strong> Vancouver's empty homes tax reduced vacancy. Leipzig, Germany limits corporate ownership to preserve affordability.
+                        </div>
+                    </div>
+
+                    <div class="vision-card">
+                        <h3>🗳️ Democratic Control</h3>
+                        <p><strong>Community participation in housing decisions</strong></p>
+                        <ul>
+                            <li>Participatory budgeting for housing investments</li>
+                            <li>Community benefits agreements for large developments</li>
+                            <li>Tenant representation on housing authority boards</li>
+                            <li>Community ownership of development decisions</li>
+                        </ul>
+                        <div class="example-box">
+                            <strong>Examples:</strong> Chicago's participatory budgeting allocates $1M annually through resident voting. Boston's community land trust has resident board control.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tools and Resources Section -->
+        <section class="organizing-section">
+            <h2>🛠️ Tools and Resources</h2>
+            <div class="resources-grid">
+                <div class="resource-category">
+                    <h3>📊 Research Tools</h3>
+                    <ul>
+                        <li><a href="https://www.portlandmaps.com" target="_blank">Portland Maps</a> - Property ownership and assessment data</li>
+                        <li><a href="https://egov.oregon.gov/sos/business" target="_blank">Oregon Secretary of State</a> - Corporate entity information</li>
+                        <li><a href="https://multco.us/ads" target="_blank">Multnomah County</a> - Property records and liens</li>
+                        <li><a href="https://www.portland.gov/bds/inspections-complaints" target="_blank">Portland BDS</a> - Code violation searches</li>
+                    </ul>
+                </div>
+                
+                <div class="resource-category">
+                    <h3>🏠 Housing Organizations</h3>
+                    <ul>
+                        <li><a href="https://www.portlandtenants.org" target="_blank">Portland Tenants United</a></li>
+                        <li><a href="https://www.oregoncat.org" target="_blank">Community Alliance of Tenants</a></li>
+                        <li><a href="https://www.housingjusticeportland.org" target="_blank">Housing Justice Portland</a></li>
+                        <li><a href="https://www.pdxtu.org" target="_blank">Portland Democratic Socialists</a></li>
+                    </ul>
+                </div>
+                
+                <div class="resource-category">
+                    <h3>📚 Organizing Resources</h3>
+                    <ul>
+                        <li><a href="https://www.organizingforpower.org" target="_blank">National Domestic Workers Alliance</a> - Power mapping guide</li>
+                        <li><a href="https://righttothecity.org" target="_blank">Right to the City Alliance</a> - Housing organizing toolkit</li>
+                        <li><a href="https://www.policylink.org" target="_blank">PolicyLink</a> - Community organizing research</li>
+                        <li><a href="https://www.trainingsforchange.org" target="_blank">Training for Change</a> - Direct action training</li>
+                    </ul>
+                </div>
+                
+                <div class="resource-category">
+                    <h3>⚖️ Legal Resources</h3>
+                    <ul>
+                        <li><a href="https://oregonlawhelp.org" target="_blank">Oregon Law Help</a> - Tenant rights information</li>
+                        <li><a href="https://www.lclac.org" target="_blank">Legal Aid Services</a> - Low-income legal assistance</li>
+                        <li><a href="https://www.oregon.gov/boli" target="_blank">Oregon BOLI</a> - Civil rights enforcement</li>
+                        <li><a href="https://www.portlandoregon.gov/PHB" target="_blank">Portland Housing Bureau</a> - Tenant services</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <p>Built with ❤️ for housing justice | <a href="https://github.com/nikkiricks/vernon-landlords">Open Source</a> | <a href="index.html">Return to Data Tool</a></p>
+        </footer>
+    </div>
+
+    <script src="organize.js?v=20250723"></script>
+</body>
+</html>
